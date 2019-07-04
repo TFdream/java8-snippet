@@ -8,6 +8,22 @@ List里面的对象元素，以某个属性来分组，例如，以id分组，�
 Map<Integer, List<Apple>> groupBy = appleList.stream().collect(Collectors.groupingBy(Apple::getId));
 ```
 
+根据对象属性进行分组，自行编辑分组条件
+```
+        Map<String, List<Student>> collect = list.stream().collect(groupingBy(s -> {
+            Integer age = s.getAge();
+            if (0<age && age<=10){
+                return "baby";
+            }else if (10<age && age<=20){
+                return "teenager";
+            }else if (20<age && age<=30){
+                return "youth";
+            }else {
+                return "old";
+            }
+        }));
+```
+
 ### 2、List转Map
 id为key，apple对象为value，可以这么做：
 ```
@@ -18,7 +34,7 @@ Map<Integer, Apple> appleMap = appleList.stream().collect(Collectors.toMap(Apple
 toMap 如果集合对象有重复的key，会报错Duplicate key ....
 apple1,apple12的id都为1。可以用 (k1,k2)->k1 来设置，如果有重复的key,则保留key1,舍弃key2
 
-### 3、过滤Filter
+### 3、过滤
 从集合中过滤出来符合条件的元素：
 ```
 //过滤出符合条件的数据
@@ -29,7 +45,9 @@ List<Apple> filterList = appleList.stream().filter(a -> a.getName().equals("香�
 ### 4.求和
 将集合中的数据按照某个属性求和:
 ```
-BigDecimal totalMoney = appleList.stream().map(Apple::getMoney).reduce(BigDecimal.ZERO, BigDecimal::add);
+Map<String, Integer> result3 = list.stream().collect(
+                Collectors.groupingBy(Student::getGroupId, Collectors.summingInt(Student::getId))
+        );
 ```
 
 ### 5、查找流中最大 最小值
